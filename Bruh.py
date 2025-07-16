@@ -53,7 +53,6 @@ class Character:
                 effective_dmg -= self.shield
                 self.shield = 0
 
-            # ✅ Only apply HP reduction if damage remains
         self.hp = max(self.hp - effective_dmg, 0)
         return effective_dmg
 
@@ -171,26 +170,22 @@ class Character:
 
         if debuff_name in ["Poison", "Burn", "Bleed"]:
             if "DoT" not in self.debuffs:
-                self.debuffs["DoT"] = {"duration": {}, "stacks": {}}  # ✅ Add "damage" dictionary
+                self.debuffs["DoT"] = {"duration": {}, "stacks": {}} 
 
             if debuff_name in self.debuffs["DoT"]["duration"]:
                 self.debuffs["DoT"]["duration"][debuff_name] = max(
                     self.debuffs["DoT"]["duration"][debuff_name], duration
-                )  # ✅ Refresh to max duration instead of resetting to a lower value
+                ) 
             else:
                 self.debuffs["DoT"]["duration"][debuff_name] = duration
 
             if debuff_name == "Bleed":
-                # ✅ Increase stack count up to 10
                 self.debuffs["DoT"]["stacks"][debuff_name] = min(
-                    10, self.debuffs["DoT"]["stacks"].get(debuff_name, 0) + 1
-                )
-
-            # ✅ Store duration
+                    10, self.debuffs["DoT"]["stacks"].get(debuff_name, 0) + 1)
             self.debuffs["DoT"]["duration"][debuff_name] = duration
         else:
             if debuff_name not in self.debuffs:
-                self.debuffs[debuff_name] = {"duration": duration, "stacks": 1}  # ✅ Initialize with 1 stack
+                self.debuffs[debuff_name] = {"duration": duration, "stacks": 1}
             else:
                 if debuff_name == "Armor Break":
                     self.debuffs[debuff_name]["stacks"] = min(self.debuffs[debuff_name]["stacks"] + 1, 5)
@@ -299,7 +294,7 @@ class Character:
             charge_level = self.special_meter if max_charge is None else min(self.special_meter, max_charge)
             print(f"{self.name} unleashes a Special Attack with {charge_level}% charge!")
             self.special(self, target, charge_level)
-            self.special_meter = 0  # Fully consume special meter
+            self.special_meter = 0
             return True
         else:
             print(f"{self.name} doesn't have enough special charge!")
